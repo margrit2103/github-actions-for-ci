@@ -51,16 +51,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
-          options: -v ${{ github.workspace }}:/goodx_repo 
+          options: -v ${{ github.workspace }}:/goodx_repo -e PGUSER=postgres -e PGHOST=localhost -e PGPORT=5432 -e PGDATABASE=goodxweb
           shell: bash
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
-              
+              echo trying su
               su - postgres
               echo whomai ?
-              
               whoami
+              
+              sudo -u postgres 
               
               echo ... dumping lysglb.mpy 
               psql -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt

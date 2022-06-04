@@ -52,7 +52,8 @@ jobs:
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
-              set PGPASSWORD=masterkey
+              PGPASSWORD=masterkey
+              echo $PGPASSWORD
               service postgresql start
               echo .. set postgre usermod
               usermod -s /bin/bash postgres              

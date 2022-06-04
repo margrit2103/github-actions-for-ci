@@ -56,13 +56,25 @@ jobs:
               echo "hello wêreld jou ou yster" 
               echo ... writing to file github/workspace/_dump/world_v2.txt
               echo "hello wêreld jou ou yster" > github/workspace/_dump/world_v2.txt
-              ... writing to file github/workspace/_dump/world_v3.txt
+              echo ... writing to file github/workspace/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./_dump/world_v3.txt
-              echo ls ./_dump
+              echo ... ls ./_dump
               ls ./_dump
-              echo ls .
+              echo ... ls .
               ls .
-    
+
+      - name: Do something with the docker
+      - uses: docker/build-push-action@v2
+        with:
+          tags: ${{ steps.settings.outputs.dbimg }}
+          push: false
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ steps.settings.outputs.dbimg }}
+          run:  |
+              echo ... ls ./_dump
+              ls ./_dump
+              echo ..              
           
       - name: Upload artifacts
         timeout-minutes: 10

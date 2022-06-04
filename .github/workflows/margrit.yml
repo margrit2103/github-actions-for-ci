@@ -45,7 +45,7 @@ jobs:
           #password: ${{ secrets.DOCKER_PASSWORD }}          
       
       
-      - name: Checkout docker
+      - name: Checkout docker. GoodX Repository is shared in folder ./goodx_repo
         uses: addnab/docker-run-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -53,11 +53,10 @@ jobs:
           image: ${{ steps.settings.outputs.dbimg }}
           options: -v ${{ github.workspace }}:/goodx_repo 
           run: |
-              echo "hello wêreld jou ou yster" 
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
-              echo ... ls ./goodx_repo/_dump
-              ls ./goodx_repo/_dump
+              echo ... dumping lysglb.mpy 
+              psql -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
           
       - name: Upload artifacts
         timeout-minutes: 10

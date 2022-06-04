@@ -29,8 +29,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
           options: -v ${{ github.workspace }}:/_dump 
-          run: |
-            echo "Running Script"      
+    
           
       - name: Upload artifacts
         timeout-minutes: 10

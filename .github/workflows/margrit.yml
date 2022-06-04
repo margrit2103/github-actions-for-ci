@@ -53,11 +53,16 @@ jobs:
           image: ${{ steps.settings.outputs.dbimg }}
           options: -v ${{ github.workspace }}:/goodx_repo
           shell: bash
-          username: postgres
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
               service postgresql start
+              echo .. set postgre usermod
+              usermod -s /bin/bash postgres
+              
+              echo ....trying su
+              
+              su - postgres
               echo whomai ?
               whoami
             

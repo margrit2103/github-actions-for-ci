@@ -20,7 +20,24 @@ jobs:
         uses: actions/checkout@v2
 
       - run: mkdir -p ./_dump
-      - run: echo hello world > ./_dump/world.txt             
+      - run: echo hello world > ./_dump/world.txt        
+
+      - name: Collect settings
+        id: settings
+        run: |
+          max_instances=${{ github.event.inputs.max_instances }}
+          while IFS= read -r l; do
+            echo "$l" | awk '{ print "::set-output name="$1"::"$2 }';
+            echo "$l" | awk '{ print "@@@setting "$1" "$2 }';
+          done <<< $(cat << EOF
+            dbimg quantsolutions/testdb:${{ github.event.inputs.dbtag || 'latest' }}
+            max_instances ${max_instances:-$(cat ${{ runner.tool_cache }}/max_instances)}
+            branch $(git rev-parse --abbrev-ref $(git describe --all))
+            githash $(git rev-parse HEAD)
+            committed $(git show -s --format=%ct)
+          EOF
+          )         
+      
       
       - name: Checkout docker
         uses: addnab/docker-run-action@v3

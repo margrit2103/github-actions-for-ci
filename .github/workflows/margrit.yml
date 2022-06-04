@@ -38,11 +38,11 @@ jobs:
           EOF
           )      
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1        
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}          
+      #- name: Login to Docker Hub
+        #uses: docker/login-action@v1        
+        #with:
+          #username: ${{ secrets.DOCKER_USERNAME }}
+          #password: ${{ secrets.DOCKER_PASSWORD }}          
       
       
       - name: Checkout docker
@@ -52,7 +52,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
           options: -v ${{ github.workspace }}:/_dump 
-          run: echo "hello wêreld jou ou yster" > ./_dump/world_v2.txt
+          run: |
+              echo "hello wêreld jou ou yster" 
+              echo "hello wêreld jou ou yster" > ./_dump/world_v2.txt
+              ls ./_dump
     
           
       - name: Upload artifacts

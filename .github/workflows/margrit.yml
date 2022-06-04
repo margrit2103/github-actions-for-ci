@@ -52,9 +52,8 @@ jobs:
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
-              echo $PGPASSWORD  $PGDATA
-              
-              /usr/lib/postgresql/12/bin/pg_ctl start
+              echo $PGPASSWORD  $PGDATA              
+              su - postgres -c /usr/lib/postgresql/12/bin/pg_ctl start
               echo .. set postgre usermod
               usermod -s /bin/bash postgres              
               echo ....trying su              

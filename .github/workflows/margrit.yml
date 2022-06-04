@@ -54,7 +54,8 @@ jobs:
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
               PGPASSWORD=masterkey
               echo $PGPASSWORD
-              service postgresql start
+              
+              /bin/sh -c su postgres -c ' /usr/lib/postgresql/12/bin/pg_ctl start 
               echo .. set postgre usermod
               usermod -s /bin/bash postgres              
               echo ....trying su              

@@ -21,5 +21,13 @@ jobs:
 
       - run: mkdir -p ./_dump
       - run: echo hello > ./_dump/world.txt             
-
+      
+      
+      - name: Upload artifacts
+        timeout-minutes: 10
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: dump
+          path: _dump
 

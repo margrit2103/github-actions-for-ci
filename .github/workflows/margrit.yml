@@ -51,18 +51,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
-          options: -v ${{ github.workspace }}:/goodx_repo -e PGUSER=postgres -e PGHOST=localhost -e PGPORT=5432 -e PGDATABASE=goodxweb
+          options: -v ${{ github.workspace }}:/goodx_repo
           shell: bash
+          username: postgres
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
+              service postgresql start
+              #echo .. set postgre usermod
+              #usermod -s /bin/bash postgres
               
-              echo .. set postgre usermod
-              usermod -s /bin/bash postgres
+              #echo trying su
               
-              echo trying su
-              
-              su - postgres
+              #su - postgres
               echo whomai ?
               whoami
             

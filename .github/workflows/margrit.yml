@@ -54,8 +54,14 @@ jobs:
           options: -v ${{ github.workspace }}:/_dump 
           run: |
               echo "hello wêreld jou ou yster" 
-              echo "hello wêreld jou ou yster" > ./_dump/world_v2.txt
+              echo ... writing to file github/workspace/_dump/world_v2.txt
+              echo "hello wêreld jou ou yster" > github/workspace/_dump/world_v2.txt
+              ... writing to file github/workspace/_dump/world_v3.txt
+              echo "hello wêreld jou ou yster" > ./_dump/world_v3.txt
+              echo ls ./_dump
               ls ./_dump
+              echo ls .
+              ls .
     
           
       - name: Upload artifacts

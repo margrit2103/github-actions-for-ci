@@ -52,6 +52,7 @@ jobs:
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
+              SET PGPASSWORD=masterkey
               service postgresql start
               echo .. set postgre usermod
               usermod -s /bin/bash postgres              
@@ -59,6 +60,7 @@ jobs:
               su - postgres
               echo whomai 
               whoami
+              
               echo ... dumping lysglb.mpy 
               psql -U postgres -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
           

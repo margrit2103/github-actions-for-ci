@@ -5,8 +5,6 @@ on:
     inputs:
       dbtag:
         description: Tag for quantsolutions/testdb image
-      max_instances:
-        description: Maximum number of concurrent spec files  
 
 jobs:
   # This workflow contains a single job called "build"
@@ -25,13 +23,11 @@ jobs:
       - name: Collect settings
         id: settings
         run: |
-          max_instances=${{ github.event.inputs.max_instances }}
           while IFS= read -r l; do
             echo "$l" | awk '{ print "::set-output name="$1"::"$2 }';
             echo "$l" | awk '{ print "@@@setting "$1" "$2 }';
           done <<< $(cat << EOF
             dbimg quantsolutions/testdb:${{ github.event.inputs.dbtag || 'latest' }}
-            max_instances ${max_instances:-$(cat ${{ runner.tool_cache }}/max_instances)}
             branch $(git rev-parse --abbrev-ref $(git describe --all))
             githash $(git rev-parse HEAD)
             committed $(git show -s --format=%ct)
@@ -52,7 +48,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
           options: -v ${{ github.workspace }}:/goodx_repo
-          shell: bash
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
@@ -63,6 +58,10 @@ jobs:
               echo ....trying su
               
               su - postgres
+              echo whomai ?
+              whoami
+
+              sudo -user postgres
               echo whomai ?
               whoami
             

@@ -59,7 +59,7 @@ jobs:
               su - postgres
               service postgresql start
               echo ... dumping lysglb.mpy 
-              psql -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
+              psql -U postgres -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
           
       - name: Upload artifacts
         timeout-minutes: 10

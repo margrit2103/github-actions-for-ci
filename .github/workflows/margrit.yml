@@ -56,13 +56,16 @@ jobs:
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
+              
+              echo .. set postgre usermod
+              usermod -s /bin/bash postgres
+              
               echo trying su
+              
               su - postgres
               echo whomai ?
               whoami
-              
-              sudo -u postgres 
-              
+            
               echo ... dumping lysglb.mpy 
               psql -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
           

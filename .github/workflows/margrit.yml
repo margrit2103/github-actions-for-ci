@@ -48,12 +48,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
           shell: bash
-          options: -e PGUSER=postgres -e PGHOST=localhost -e PGPORT=5432 -e PGDATABASE=db_gxtest -v ${{ github.workspace }}:/goodx_repo
+          options: -e PGUSER=postgres -e PGHOST=localhost -e PGPORT=5432 -e PGPASSWORD=masterkey -e PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin -e PGDATA=/var/lib/postgresql/pgdata -v ${{ github.workspace }}:/goodx_repo
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
-              PGPASSWORD=masterkey
-              echo $PGPASSWORD
+              echo $PGPASSWORD  $PGDATA
               
               /bin/sh -c su postgres -c ' /usr/lib/postgresql/12/bin/pg_ctl start 
               echo .. set postgre usermod

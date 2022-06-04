@@ -52,6 +52,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
           options: -v ${{ github.workspace }}:/goodx_repo 
+          shell: bash
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt

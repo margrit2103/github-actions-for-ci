@@ -55,22 +55,8 @@ jobs:
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
-              echo ....status of services p1
-              service  --status-all
               
               su - postgres
-              
-              echo ... Starting postgres
-              
-              service postgresql start
-              
-              echo ....status of services p1
-              service  --status-all
-              
-              echo ... changing user 
-              
-              su - postgres
-              
               echo whomai ?
               
               whoami

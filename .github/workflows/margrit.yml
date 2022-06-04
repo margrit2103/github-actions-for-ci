@@ -58,6 +58,8 @@ jobs:
               echo ....status of services p1
               service  --status-all
               
+              su - postgres
+              
               echo ... Starting postgres
               
               service postgresql start
@@ -69,8 +71,12 @@ jobs:
               
               su - postgres
               
+              echo whomai ?
+              
+              whoami
+              
               echo ... dumping lysglb.mpy 
-              psql -U postgres -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
+              psql -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
           
       - name: Upload artifacts
         timeout-minutes: 10

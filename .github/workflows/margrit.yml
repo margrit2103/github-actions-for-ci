@@ -52,6 +52,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
           options: -v ${{ github.workspace }}:/_dump 
+          run: echo "hello wêreld jou ou yster" > ./_dump/world_v2.txt
     
           
       - name: Upload artifacts

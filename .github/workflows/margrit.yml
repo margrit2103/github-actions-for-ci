@@ -55,7 +55,7 @@ jobs:
               echo $PGPASSWORD  $PGDATA     
               _cmd='/usr/lib/postgresql/12/bin/pg_ctl restart -D '$PGDATA
               echo cmd $_cmd
-              su - postgres -c $_cmd
+              su - postgres -c '/usr/lib/postgresql/12/bin/pg_ctl start -D /var/lib/postgresql/pgdata'
               echo .. set postgre usermod
               usermod -s /bin/bash postgres              
               echo ....trying su              

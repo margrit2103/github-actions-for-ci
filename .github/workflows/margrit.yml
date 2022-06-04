@@ -47,26 +47,20 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           image: ${{ steps.settings.outputs.dbimg }}
+          shell: bash
           options: -v ${{ github.workspace }}:/goodx_repo
           run: |
               echo ... writing to file ./goodx_repo/_dump/world_v3.txt
               echo "hello wêreld jou ou yster" > ./goodx_repo/_dump/world_v3.txt
               service postgresql start
               echo .. set postgre usermod
-              usermod -s /bin/bash postgres
-              
-              echo ....trying su
-              
+              usermod -s /bin/bash postgres              
+              echo ....trying su              
               su - postgres
-              echo whomai ?
+              echo whomai 
               whoami
-
-              sudo -user postgres
-              echo whomai ?
-              whoami
-            
               echo ... dumping lysglb.mpy 
-              psql -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
+              psql -u postgres -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
           
       - name: Upload artifacts
         timeout-minutes: 10

@@ -1,8 +1,8 @@
 import filecmp
 import glob
 
-d1 = "./goodx_repo/src/tests/sql_regression/answ/"
-d2 = "./goodx_repo/src/tests/sql_regression/model_answer/"
+d1 = "./goodx_repo/_dump/sql_regression/answ"
+d2 = "./goodx_repo/_dump/sql_regression/model_answ"
 files = glob.glob(f"{d2}*.txt")
 
 # shallow comparison

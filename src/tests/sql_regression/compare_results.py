@@ -1,8 +1,9 @@
 import filecmp
+import glob
 
-d1 = "./tests/sql_regression/answ/"
-d2 = "./tests/sql_regression/model_answer/"
-files = ['grep.txt']
+d1 = "./goodx_repo/src/tests/sql_regression/answ/"
+d2 = "./goodx_repo/src/tests/sql_regression/model_answer/"
+files = glob.glob(f"{d2}*.txt")
 
 # shallow comparison
 match, mismatch, errors = filecmp.cmpfiles(d1, d2, files)

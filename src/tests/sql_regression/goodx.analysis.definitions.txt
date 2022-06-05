@@ -1,0 +1,10 @@
+Check that virtual fields are not defined for inserting / updating
+ meta_table | field | populated_in_insert | populated_in_update | is_field_on_table 
+------------+-------+---------------------+---------------------+-------------------
+(0 rows)
+
+Check that virtual fields are not pointing to an invalid table
+ meta_table | field | field_description 
+------------+-------+-------------------
+(0 rows)
+

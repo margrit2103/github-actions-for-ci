@@ -1,0 +1,84 @@
+Parameters: this test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ debtor 
+--------
+ t
+(1 row)
+
+ creditor 
+----------
+ t
+(1 row)
+
+ current_period 
+----------------
+ t
+(1 row)
+
+ treating_doc 
+--------------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+ mpystipe 
+----------
+ t
+(1 row)
+
+ xml_template 
+--------------
+ t
+(1 row)
+
+UPDATE 1
+Simple billing group calculation. Primary practioner = 1 minute (no reduction).
+ critical_errors | a_id_integer | billing_code | minutes | units | units_adjustment |                                                      unit_info_text                                                      | posting_order_numeric2 
+-----------------+--------------+--------------+---------+-------+------------------+--------------------------------------------------------------------------------------------------------------------------+------------------------
+                 |           10 | 1049 N       |    1.00 |  6.00 |             0.00 | 6.00 units                                                                                                               | 10.00
+                 |           20 | 0023         |    1.00 |  2.00 |             0.00 | 2.00 (time units)                                                                                                        | 20.00
+                 |           30 | 0018 AN      |    1.00 |  1.00 |             0.00 | 1.0000 (weight units)                                                                                                    | 30.00
+                 |           40 | 0029         |    1.00 |  2.00 |             7.00 | 2.00 (time units) + 6.00 (procedure units) + 1.00 (weight units)                                                         | 40.00
+                 |           41 | 0029         |   61.00 | 11.00 |             8.20 | 11.00 (time units) - 2.20 (80.0% reduction) + 6.00 (procedure units) - 1.2000 (procedure reduced) + 4.40 (weight units)  | 41.00
+                 |           42 | 0029         |  250.00 | 47.00 |            15.40 | 47.00 (time units) - 9.40 (80.0% reduction) + 6.00 (procedure units) - 1.2000 (procedure reduced) + 18.80 (weight units) | 42.00
+                 |           44 | 0018 AN      |    1.00 |  1.00 |             0.00 | 1.0000 (weight units)                                                                                                    | -999.00
+                 |           46 | 0018 AN      |    1.00 |  4.40 |             0.00 | 4.4000 (weight units)                                                                                                    | -999.00
+                 |           48 | 0018 AN      |    1.00 | 18.80 |             0.00 | 18.8000 (weight units)                                                                                                   | -999.00
+                 |           49 | 0036         |    0.00 |  2.00 |             0.00 |                                                                                                                          | -999.00
+(10 rows)
+
+Simple billing group calculation for GP. Primary practioner = 1000 minute (reduction for 0023).
+ critical_errors | a_id_integer | billing_code | minutes | units  | units_adjustment |                                                      unit_info_text                                                      | posting_order_numeric2 
+-----------------+--------------+--------------+---------+--------+------------------+--------------------------------------------------------------------------------------------------------------------------+------------------------
+                 |           10 | 1049 N       |    1.00 |   6.00 |            -1.20 | 6.00 units - 1.200 (80.0% reduction)                                                                                     | 10.00
+                 |           20 | 0023         | 1000.00 | 197.00 |           -39.40 | 197.00 (time units) - 39.4000 (80.0% reduction)                                                                          | 20.00
+                 |           30 | 0018 AN      |    1.00 |  78.80 |             0.00 | 78.8000 (weight units)                                                                                                   | 30.00
+                 |           40 | 0029         |    1.00 |   2.00 |             7.00 | 2.00 (time units) + 6.00 (procedure units) + 1.00 (weight units)                                                         | 40.00
+                 |           41 | 0029         |   61.00 |  11.00 |             8.20 | 11.00 (time units) - 2.20 (80.0% reduction) + 6.00 (procedure units) - 1.2000 (procedure reduced) + 4.40 (weight units)  | 41.00
+                 |           42 | 0029         |  250.00 |  47.00 |            15.40 | 47.00 (time units) - 9.40 (80.0% reduction) + 6.00 (procedure units) - 1.2000 (procedure reduced) + 18.80 (weight units) | 42.00
+                 |           44 | 0018 AN      |    1.00 |   1.00 |             0.00 | 1.0000 (weight units)                                                                                                    | -999.00
+                 |           46 | 0018 AN      |    1.00 |   4.40 |             0.00 | 4.4000 (weight units)                                                                                                    | -999.00
+                 |           48 | 0018 AN      |    1.00 |  18.80 |             0.00 | 18.8000 (weight units)                                                                                                   | -999.00
+                 |           49 | 0036         |    0.00 | 197.00 |             0.00 |                                                                                                                          | -999.00
+                 |           50 | 0035         |    0.00 | 197.00 |             0.00 |                                                                                                                          | -999.00
+(11 rows)
+
+UPDATE 1
+Simple billing group calculation for specialist. Primary practioner = 1000 minute (no reduction for 0023, no 0036/0035 rows).
+ critical_errors | a_id_integer | billing_code | minutes | units  | units_adjustment |                                                      unit_info_text                                                      | posting_order_numeric2 
+-----------------+--------------+--------------+---------+--------+------------------+--------------------------------------------------------------------------------------------------------------------------+------------------------
+                 |           10 | 1049 N       |    1.00 |   6.00 |             0.00 | 6.00 units                                                                                                               | 10.00
+                 |           20 | 0023         | 1000.00 | 197.00 |             0.00 | 197.00 (time units)                                                                                                      | 20.00
+                 |           30 | 0018 AN      |    1.00 |  98.50 |             0.00 | 98.5000 (weight units)                                                                                                   | 30.00
+                 |           40 | 0029         |    1.00 |   2.00 |             7.00 | 2.00 (time units) + 6.00 (procedure units) + 1.00 (weight units)                                                         | 40.00
+                 |           41 | 0029         |   61.00 |  11.00 |             8.20 | 11.00 (time units) - 2.20 (80.0% reduction) + 6.00 (procedure units) - 1.2000 (procedure reduced) + 4.40 (weight units)  | 41.00
+                 |           42 | 0029         |  250.00 |  47.00 |            15.40 | 47.00 (time units) - 9.40 (80.0% reduction) + 6.00 (procedure units) - 1.2000 (procedure reduced) + 18.80 (weight units) | 42.00
+                 |           44 | 0018 AN      |    1.00 |   1.00 |             0.00 | 1.0000 (weight units)                                                                                                    | -999.00
+                 |           46 | 0018 AN      |    1.00 |   4.40 |             0.00 | 4.4000 (weight units)                                                                                                    | -999.00
+                 |           48 | 0018 AN      |    1.00 |  18.80 |             0.00 | 18.8000 (weight units)                                                                                                   | -999.00
+(9 rows)
+
+UPDATE 1

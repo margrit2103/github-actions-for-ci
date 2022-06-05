@@ -1,0 +1,169 @@
+Analysis schema tests
+Parameters: this test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ debtor 
+--------
+ t
+(1 row)
+
+ creditor 
+----------
+ t
+(1 row)
+
+ current_period 
+----------------
+ t
+(1 row)
+
+ treating_doc 
+--------------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+Balancing test before tests - this is to be able to establish whether data was possibly broken before the test was run.
+ _ok 
+-----
+ t
+(1 row)
+
+ entity | deb_s_vs_man_ok | deb_s_vs_cas1_ok | deb_s_vs_deboop_ok | deb_s_vs_debfopen_ok | deb_s_vs_debfdetail_ok | cre_s_vs_cli2_ok | cre_s_vs_man_ok | cre_s_vs_creopen_ok | cashbook_ok | analysis_ok 
+--------+-----------------+------------------+--------------------+----------------------+------------------------+------------------+-----------------+---------------------+-------------+-------------
+      1 | t               | t                | t                  | t                    | t                      | t                | t               | t                   | t           | t
+(1 row)
+
+Post debtor invoice
+ result 
+--------
+ OK100
+(1 row)
+
+Post debtor credit note
+ result 
+--------
+ OK10
+(1 row)
+
+Post creditor ledger invoice
+ result 
+--------
+ OK101
+(1 row)
+
+Post creditor ledger cnote
+ result 
+--------
+ OK10
+(1 row)
+
+Post creditor stock invoice
+ result 
+--------
+ OK101
+(1 row)
+
+Post creditor stock cnote
+ result 
+--------
+ OK10
+(1 row)
+
+Post journal: Ledgers
+                               post_jnl                               
+----------------------------------------------------------------------
+ [{"code": "J0100", "place": "journals/journal.1", "parameters": ""}]
+(1 row)
+
+Post journal: Debtor
+                               post_jnl                               
+----------------------------------------------------------------------
+ [{"code": "J0100", "place": "journals/journal.1", "parameters": ""}]
+(1 row)
+
+Post journal: Creditor
+                               post_jnl                               
+----------------------------------------------------------------------
+ [{"code": "J0100", "place": "journals/journal.1", "parameters": ""}]
+(1 row)
+
+Post journal: Cashbook
+                               post_jnl                               
+----------------------------------------------------------------------
+ [{"code": "J0100", "place": "journals/journal.1", "parameters": ""}]
+(1 row)
+
+Post deposit to ledger
+ post_deposit 
+--------------
+ CB100
+(1 row)
+
+Post correction on ledger deposit
+ deposit_correction 
+--------------------
+ CB100
+(1 row)
+
+Post cheque to ledger
+ post_cheque 
+-------------
+ CB100
+(1 row)
+
+Post correction on ledger cheque
+ cheque_correction 
+-------------------
+ CB100
+(1 row)
+
+Post receipt (deposit) on debtor invoice
+ debtor_deposit 
+----------------
+ CB100
+(1 row)
+
+Reverse receipt (deposit) on debtor invoice: too much
+ debtor_deposit_wb 
+-------------------
+ CB100
+(1 row)
+
+Add to receipt (deposit) on debtor invoice
+ debtor_deposit_wb 
+-------------------
+ CB100
+(1 row)
+
+Post payment (cheque) on creditor invoice
+ creditor_payment 
+------------------
+ CB100
+(1 row)
+
+Reverse payment (cheque) on creditor invoice
+ cre_deposit_wb 
+----------------
+ CB100
+(1 row)
+
+Add payment (cheque) on creditor invoice
+ cre_deposit_wb 
+----------------
+ CB100
+(1 row)
+
+Balancing test after tests
+ _ok 
+-----
+ t
+(1 row)
+
+ entity | deb_s_vs_man_ok | deb_s_vs_cas1_ok | deb_s_vs_deboop_ok | deb_s_vs_debfopen_ok | deb_s_vs_debfdetail_ok | cre_s_vs_cli2_ok | cre_s_vs_man_ok | cre_s_vs_creopen_ok | cashbook_ok | analysis_ok 
+--------+-----------------+------------------+--------------------+----------------------+------------------------+------------------+-----------------+---------------------+-------------+-------------
+      1 | t               | t                | t                  | t                    | t                      | t                | t               | t                   | t           | t
+(1 row)
+

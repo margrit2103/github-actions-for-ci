@@ -1,0 +1,21 @@
+Claim class test
+Parameters: This test assumes that a goodx1 directory exists.
+Make sure that no claimclass tables are left
+ count 
+-------
+     0
+(1 row)
+
+Insert
+ _ | description | beskrywing | inhouse | outhouse | entity_uid 
+---+-------------+------------+---------+----------+------------
+ t | english     | afrikaans  | IH      | OH       |          1
+(1 row)
+
+Update
+UPDATE 1
+ description | beskrywing | inhouse | outhouse | entity_uid 
+-------------+------------+---------+----------+------------
+ DESCRIPTION | BESRYWING  | IH_v2   | OH_v2    |          1
+(1 row)
+

@@ -1,0 +1,39 @@
+Parameters: this test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ debtor 
+--------
+ t
+(1 row)
+
+ creditor 
+----------
+ t
+(1 row)
+
+ current_period 
+----------------
+ t
+(1 row)
+
+ treating_doc 
+--------------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+ critical_errors | a_id_integer | billing_code | units  | modified_by | modified  
+-----------------+--------------+--------------+--------+-------------+-----------
+                 |            1 | 1671         | 148.00 | PH#0018 SP  | {}
+                 |            2 | 1671         | 148.00 | PH#0018 SP  | {}
+                 |            3 | 1675         | 128.00 | PH#0018 SP  | {}
+                 |            4 | 0018 SP      | 212.00 |             | {1,2,3}
+                 |            5 | 0009         |  38.40 |             | {3,4}
+                 |            6 | 0009         |  82.80 |             | {1,3,4}
+                 |            7 | 0009         |  88.80 |             | {1,2,4}
+                 |            8 | 0009         | 127.20 |             | {1,2,3,4}
+                 |            9 | 0009         |  84.80 |             | {1,2,3}
+(9 rows)
+

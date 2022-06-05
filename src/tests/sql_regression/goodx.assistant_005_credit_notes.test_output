@@ -1,0 +1,107 @@
+Parameters: this test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ debtor 
+--------
+ t
+(1 row)
+
+ creditor 
+----------
+ t
+(1 row)
+
+ current_period 
+----------------
+ t
+(1 row)
+
+ treating_doc 
+--------------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+Parameters Invoice template
+ invoice_template 
+------------------
+ t
+(1 row)
+
+----------------------------------------------------------------------
+5.1 Post 3 invoice with 5 assistant codes (Check that 3 creditor invoices have been generated for each debtor invoice)
+----------------------------------------------------------------------
+Post 3 invoices with 5 assistant codes
+ critical_errors | a_id_integer | billing_code | units  |                                                                modified                                                                 
+-----------------+--------------+--------------+--------+-----------------------------------------------------------------------------------------------------------------------------------------
+                 |            1 | 1671         | 148.00 | <modified_items_integerarr/>
+                 |            2 | 1671         | 148.00 | <modified_items_integerarr/>
+                 |            3 | 1675         | 128.00 | <modified_items_integerarr/>
+                 |            4 | 0018 SP      | 212.00 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element></modified_items_integerarr>
+                 |            5 | 0009         |  38.40 | <modified_items_integerarr><element>3</element><element>4</element></modified_items_integerarr>
+                 |            6 | 0009         |  82.80 | <modified_items_integerarr><element>1</element><element>3</element><element>4</element></modified_items_integerarr>
+                 |            7 | 0009         |  88.80 | <modified_items_integerarr><element>1</element><element>2</element><element>4</element></modified_items_integerarr>
+                 |            8 | 0009         | 127.20 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element><element>4</element></modified_items_integerarr>
+                 |            9 | 0009         |  84.80 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element></modified_items_integerarr>
+(9 rows)
+
+ critical_errors | a_id_integer | billing_code | units  |                                                                modified                                                                 
+-----------------+--------------+--------------+--------+-----------------------------------------------------------------------------------------------------------------------------------------
+                 |            1 | 1671         | 148.00 | <modified_items_integerarr/>
+                 |            2 | 1671         | 148.00 | <modified_items_integerarr/>
+                 |            3 | 1675         | 128.00 | <modified_items_integerarr/>
+                 |            4 | 0018 SP      | 212.00 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element></modified_items_integerarr>
+                 |            5 | 0009         |  38.40 | <modified_items_integerarr><element>3</element><element>4</element></modified_items_integerarr>
+                 |            6 | 0009         |  82.80 | <modified_items_integerarr><element>1</element><element>3</element><element>4</element></modified_items_integerarr>
+                 |            7 | 0009         |  88.80 | <modified_items_integerarr><element>1</element><element>2</element><element>4</element></modified_items_integerarr>
+                 |            8 | 0009         | 127.20 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element><element>4</element></modified_items_integerarr>
+                 |            9 | 0009         |  84.80 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element></modified_items_integerarr>
+(9 rows)
+
+ critical_errors | a_id_integer | billing_code | units  |                                                                modified                                                                 
+-----------------+--------------+--------------+--------+-----------------------------------------------------------------------------------------------------------------------------------------
+                 |            1 | 1671         | 148.00 | <modified_items_integerarr/>
+                 |            2 | 1671         | 148.00 | <modified_items_integerarr/>
+                 |            3 | 1675         | 128.00 | <modified_items_integerarr/>
+                 |            4 | 0018 SP      | 212.00 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element></modified_items_integerarr>
+                 |            5 | 0009         |  38.40 | <modified_items_integerarr><element>3</element><element>4</element></modified_items_integerarr>
+                 |            6 | 0009         |  82.80 | <modified_items_integerarr><element>1</element><element>3</element><element>4</element></modified_items_integerarr>
+                 |            7 | 0009         |  88.80 | <modified_items_integerarr><element>1</element><element>2</element><element>4</element></modified_items_integerarr>
+                 |            8 | 0009         | 127.20 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element><element>4</element></modified_items_integerarr>
+                 |            9 | 0009         |  84.80 | <modified_items_integerarr><element>1</element><element>2</element><element>3</element></modified_items_integerarr>
+(9 rows)
+
+ latest_deb_invnr3 
+-------------------
+ t
+(1 row)
+
+ latest_deb_invnr2 
+-------------------
+ t
+(1 row)
+
+ latest_deb_invnr1 
+-------------------
+ t
+(1 row)
+
+5.2 Reverse everything - multiple credit notes in the same XML
+ critical | result 
+----------+--------
+          | OK10
+(1 row)
+
+2.3. Check that the total turnover is zero on debtors and creditors
+ deb_invoices | cre_invoices | deb_turnover | cre_turnover 
+--------------+--------------+--------------+--------------
+            3 |           15 |         0.00 |         0.00
+(1 row)
+

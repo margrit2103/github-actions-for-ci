@@ -1,0 +1,53 @@
+\echo Trace batch tracking for item
+
+<table>
+    <global_data>
+        <a_id_integer>1</a_id_integer>
+        <delete_temp_integer>0</delete_temp_integer>
+        <adir_integer>1</adir_integer>
+        <system_user_varchar>AUTO</system_user_varchar>
+        <return_billing_lists_info>0</return_billing_lists_info>
+        <use_input_diagnosis_integer>1</use_input_diagnosis_integer>
+    </global_data>
+    <creditors>
+        <creditor>
+            <a_id_integer>1</a_id_integer>
+            <goodx_id_integer>3</goodx_id_integer>
+        </creditor>
+    </creditors>
+    <creditor_invoices>
+        <creditor_invoice>
+            <a_id_integer>1</a_id_integer>
+            <creditor_a_id_integer>1</creditor_a_id_integer>
+            <date_date>2022-04-05</date_date>
+            <period_integer>202302</period_integer>
+            <supplier_invno_varchar>1234</supplier_invno_varchar>
+            <adir_integer>1</adir_integer>
+            <cre_invtype_integer>1</cre_invtype_integer>
+            <delivery_crenr_integer>0</delivery_crenr_integer>
+            <supplier_ordnr_varchar/>
+            <row>
+                <a_id_integer>1</a_id_integer>
+                <ledger_varchar>CAS2</ledger_varchar>
+                <qty_numeric2>200.00</qty_numeric2>
+                <amt_numeric2>75.81</amt_numeric2>
+                <vat_numeric2>9.89</vat_numeric2>
+                <description_varchar>BEE CURE CHILDREN PROPOLIS SYR</description_varchar>
+                <billing_code_varchar>GMED1988</billing_code_varchar>
+                <warehouse_goodx_id_integer>1</warehouse_goodx_id_integer>
+                <bin_goodx_id_integer>1</bin_goodx_id_integer>
+                <last_pprice_mode_integer>1</last_pprice_mode_integer>
+                <batch_tracking_integerarr><element>1</element><element>2</element></batch_tracking_integerarr>
+            </row>
+        </creditor_invoice>
+    </creditor_invoices>
+    <batch_tracking>
+         <batch>
+            <a_id_integer>1</a_id_integer>
+            <lot_no_varchar>LOT1</lot_no_varchar>
+            <exp_date>2030-04-05</exp_date>
+            <qty_numeric2>1</qty_numeric2>
+            <barcode_varchar>12345</barcode_varchar>
+         </batch>
+    </batch_tracking>
+</table>

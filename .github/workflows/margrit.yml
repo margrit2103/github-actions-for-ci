@@ -66,6 +66,13 @@ jobs:
               echo ... dumping lysglb.mpy 
               psql -U postgres -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
               psql -U postgres -d goodxweb -f "./goodx_repo/src/scripts/script1.sql" > ./goodx_repo/_dump/lysglb_mpy.txt
+              
+              echo .... EXECUTING python  python 
+              python ./goodx_repo/src/tests/sql_regression/test_python.py
+              
+              echo .... EXECUTING python  python3 
+              python3 ./goodx_repo/src/tests/sql_regression/test_python.py
+
           
       - name: Upload artifacts
         timeout-minutes: 10

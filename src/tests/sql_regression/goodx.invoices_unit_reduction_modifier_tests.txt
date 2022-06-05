@@ -1,0 +1,64 @@
+Parameters: this test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ debtor 
+--------
+ t
+(1 row)
+
+ creditor 
+----------
+ t
+(1 row)
+
+ current_period 
+----------------
+ t
+(1 row)
+
+ treating_doc 
+--------------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+GLV84 test
+Parameters: this test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ debtor 
+--------
+ t
+(1 row)
+
+ creditor 
+----------
+ t
+(1 row)
+
+ current_period 
+----------------
+ t
+(1 row)
+
+ treating_doc 
+--------------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+ no_critical_errors |              xpath              |              xpath               
+--------------------+---------------------------------+----------------------------------
+                    | {3557,3559,3560,6305,6305,6305} | {48.60,0.00,5.40,0.00,0.00,0.00}
+(1 row)
+
+GLV85 test
+ no_critical_errors |                          xpath                          |              xpath              
+--------------------+---------------------------------------------------------+---------------------------------
+                    | {3557,3559,3560,"6305 GLV85","6305 GLV85","6305 GLV85"} | {0.00,0.00,5.40,0.00,0.00,0.00}
+(1 row)
+

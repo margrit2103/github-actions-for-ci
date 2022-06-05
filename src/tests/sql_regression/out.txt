@@ -1,0 +1,198 @@
+set global parameters: static for test
+ finper | transaction_schema | adir | xml_template | xml_template_reversal | template_flag_tran_as_reconned 
+--------+--------------------+------+--------------+-----------------------+--------------------------------
+ t      | t                  | t    | t            | t                     | t
+(1 row)
+
+set parameters for TEST1
+ primary_cashbook | contra_cashbook | primary_transaction | contra_transaction 
+------------------+-----------------+---------------------+--------------------
+ KAS1             | KAS2            | 20                  | 30
+(1 row)
+
+TEST1.00: post INTE-CASHBOOK deposit between KAS1 and KAS2
+ feedback_summary | info | critical_errors | primary_doknr | contra_doknr | primary_analysis_table | contra_analysis_table | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+---------------+--------------+------------------------+-----------------------+-------------------+------------------
+ CB100            | 2    |                 | t             | t            | t                      | t                     | 20                | 32
+(1 row)
+
+Record posted document numbers
+DO
+check(1) posted to correct tables (2) doknr vs nappikode
+ primary_analysis_table | secondary_analysis_table | primary_doc_vs_contra_nappi | contra_doc_vs_primary_nappi 
+------------------------+--------------------------+-----------------------------+-----------------------------
+ dep1_s                 | chq2_s                   | t                           | t
+(1 row)
+
+TEST1.01 : reverse INTE-CASHBOOK deposit between KAS1 and KAS2 on primary cashbook side.
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CB100            | 2    |                 | t                        | t                       | t                                 | t                                | -20               | -32
+(1 row)
+
+ primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | primary_docno_for_reversal_ok | contra_docno_for_reversal_ok 
+-----------------------------------+----------------------------------+-------------------------------+------------------------------
+ dwb1_s                            | qwb2_s                           | t                             | t
+(1 row)
+
+TEST 1.02 : reverse INTE-CASHBOOK deposit between KAS1 and KAS2 on CONTRA cashbook side. (Change trantype to -30 and switch cashbook)
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CB100            | 2    |                 | t                        | t                       | t                                 | t                                | -30               | -22
+(1 row)
+
+ primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | primary_docno_for_reversal_ok | contra_docno_for_reversal_ok 
+-----------------------------------+----------------------------------+-------------------------------+------------------------------
+ qwb2_s                            | dwb1_s                           | t                             | t
+(1 row)
+
+TEST1.1.2: Recon test - make sure that corrections cannot be posted if one of the two source transactions is flagged as reconned.
+BEGIN
+SAVEPOINT
+Test 1.21 flag primary document as reconned
+DO
+TEST 1.22 Try and post correction from the primary document side (primary flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC010           |      | 1               | f                        | f                       | f                                 | f                                | -20               | 
+(1 row)
+
+TEST 1.22 Try and post correction from the contra document side (primary flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC011           |      | 1               | f                        | f                       | f                                 | f                                | -30               | 
+(1 row)
+
+ROLLBACK
+COMMIT
+Test 1.3 flag contra document as reconned,
+BEGIN
+SAVEPOINT
+DO
+TEST 1.31 Try and post correction from the contra document side (contra flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC010           |      | 1               | f                        | f                       | f                                 | f                                | -30               | 
+(1 row)
+
+TEST 1.32 Try and post correction from the primary document side (contra flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC011           |      | 1               | f                        | f                       | f                                 | f                                | -20               | 
+(1 row)
+
+ROLLBACK
+COMMIT
+TEST 1.4 Try and post correction to another cashbook. This must fail
+BEGIN
+SAVEPOINT
+TEST 1.31 Try and post correction from the primary document side - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC014           |      | 1               | f                        | f                       | f                                 | f                                | -20               | 
+(1 row)
+
+TEST 1.32 Try and post correction from the contra document side - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC014           |      | 1               | f                        | f                       | f                                 | f                                | -30               | 
+(1 row)
+
+ROLLBACK
+COMMIT
+set parameters for TEST2
+ primary_transaction | contra_transaction 
+---------------------+--------------------
+ 30                  | 20
+(1 row)
+
+TEST2.00: post INTE-CASHBOOK cheque between KAS1 and KAS2
+ feedback_summary | info | critical_errors | primary_doknr | contra_doknr | primary_analysis_table | contra_analysis_table | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+---------------+--------------+------------------------+-----------------------+-------------------+------------------
+ CB100            | 2    |                 | t             | t            | t                      | t                     | 30                | 22
+(1 row)
+
+Record posted document numbers
+DO
+check(1) posted to correct tables (2) doknr vs nappikode
+ primary_analysis_table | secondary_analysis_table | primary_doc_vs_contra_nappi | contra_doc_vs_primary_nappi 
+------------------------+--------------------------+-----------------------------+-----------------------------
+ chq1_s                 | dep2_s                   | t                           | t
+(1 row)
+
+TEST2.01 : reverse INTE-CASHBOOK cheque between KAS1 and KAS2 on primary cashbook side.
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CB100            | 2    |                 | t                        | t                       | t                                 | t                                | -30               | -22
+(1 row)
+
+ primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | primary_docno_for_reversal_ok | contra_docno_for_reversal_ok 
+-----------------------------------+----------------------------------+-------------------------------+------------------------------
+ qwb1_s                            | dwb2_s                           | t                             | t
+(1 row)
+
+TEST2.02 : reverse INTE-CASHBOOK cheque between KAS1 and KAS2 on CONTRA cashbook side. (Change trantype to -20 and switch cashbook)
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CB100            | 2    |                 | t                        | t                       | t                                 | t                                | -20               | -32
+(1 row)
+
+ primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | primary_docno_for_reversal_ok | contra_docno_for_reversal_ok 
+-----------------------------------+----------------------------------+-------------------------------+------------------------------
+ dwb2_s                            | qwb1_s                           | t                             | t
+(1 row)
+
+TEST2.1.2: Recon test - make sure that corrections cannot be posted if one of the two source transactions is flagged as reconned.
+BEGIN
+SAVEPOINT
+Test 1.21 flag primary document as reconned
+DO
+TEST 1.22 Try and post correction from the primary document side (primary flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC010           |      | 1               | f                        | f                       | f                                 | f                                | -30               | 
+(1 row)
+
+TEST2.22 Try and post correction from the contra document side (primary flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC011           |      | 1               | f                        | f                       | f                                 | f                                | -20               | 
+(1 row)
+
+ROLLBACK
+COMMIT
+Test2.3 flag contra document as reconned,
+BEGIN
+SAVEPOINT
+DO
+TEST2.31 Try and post correction from the contra document side (contra flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC010           |      | 1               | f                        | f                       | f                                 | f                                | -20               | 
+(1 row)
+
+TEST2.32 Try and post correction from the primary document side (contra flagged as reconned) - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC011           |      | 1               | f                        | f                       | f                                 | f                                | -30               | 
+(1 row)
+
+ROLLBACK
+COMMIT
+TEST 2.4 Try and post correction to another cashbook. This must fail
+BEGIN
+SAVEPOINT
+TEST 1.31 Try and post correction from the primary document side - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC014           |      | 1               | f                        | f                       | f                                 | f                                | -30               | 
+(1 row)
+
+TEST 1.32 Try and post correction from the contra document side - should fail
+ feedback_summary | info | critical_errors | primary_doknr_reversal_p | contra_doknr_reversal_p | primary_analysis_table_reversal_p | contra_analysis_table_reversal_p | _primary_trantype | _contra_trantype 
+------------------+------+-----------------+--------------------------+-------------------------+-----------------------------------+----------------------------------+-------------------+------------------
+ CBC014           |      | 1               | f                        | f                       | f                                 | f                                | -20               | 
+(1 row)
+
+ROLLBACK
+COMMIT

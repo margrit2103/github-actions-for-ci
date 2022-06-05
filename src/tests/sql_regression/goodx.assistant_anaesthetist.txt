@@ -1,0 +1,41 @@
+Parameters: this test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ debtor 
+--------
+ t
+(1 row)
+
+ creditor 
+----------
+ t
+(1 row)
+
+ current_period 
+----------------
+ t
+(1 row)
+
+ treating_doc 
+--------------
+ t
+(1 row)
+
+ ref_doc 
+---------
+ t
+(1 row)
+
+ critical_errors | a_id_integer | billing_code | units |                                                                             modified                                                                             | minutes | units | units_adjustment |                                           unit_info_text                                           
+-----------------+--------------+--------------+-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+-------+------------------+----------------------------------------------------------------------------------------------------
+                 |           10 | 0151         | 16.00 | <modified_items_integerarr/>                                                                                                                                     |    1.00 | 16.00 |             0.00 | 16.00 units
+                 |           20 | 0637 N       |  3.00 | <modified_items_integerarr/>                                                                                                                                     |    1.00 |  3.00 |             0.00 | 3.00 units
+                 |           30 | 5445         |  5.00 | <modified_items_integerarr/>                                                                                                                                     |    1.00 |  5.00 |             0.00 | 5.00 units
+                 |           40 | 5441         |  1.00 | <modified_items_integerarr/>                                                                                                                                     |    1.00 |  1.00 |             0.00 | 1.00 units
+                 |           50 | 0032         |  2.00 | <modified_items_integerarr><element>20</element></modified_items_integerarr>                                                                                     |    1.00 |  2.00 |             0.00 | .
+                 |           60 | 0023         |  2.00 | <modified_items_integerarr/>                                                                                                                                     |    1.00 |  2.00 |             0.00 | 2.00 (time units)
+                 |           70 | 0029         |  2.00 | <modified_items_integerarr><element>20</element><element>50</element></modified_items_integerarr>                                                                |    1.00 |  2.00 |             5.00 | 2.00 (time units) + 5.00 (procedure units)
+                 |           80 | 0029         |  2.00 | <modified_items_integerarr><element>20</element><element>30</element><element>50</element></modified_items_integerarr>                                           |    1.00 |  2.00 |            10.00 | 2.00 (time units) + 10.00 (procedure units)
+                 |           90 | 0029         | 17.00 | <modified_items_integerarr><element>20</element><element>50</element></modified_items_integerarr>                                                                |  100.00 | 17.00 |             1.60 | 17.00 (time units) - 3.40 (80.0% reduction) + 5.00 (procedure units) - 1.0000 (procedure reduced)
+                 |          100 | 0029         | 17.00 | <modified_items_integerarr><element>20</element><element>30</element><element>50</element></modified_items_integerarr>                                           |  100.00 | 17.00 |             6.60 | 17.00 (time units) - 3.40 (80.0% reduction) + 10.00 (procedure units) - 2.0000 (procedure reduced)
+                 |          101 | 0036         |  2.00 | <modified_items_integerarr><element>20</element><element>30</element><element>40</element><element>50</element><element>60</element></modified_items_integerarr> |    0.00 |  2.00 |             0.00 | 
+(11 rows)
+

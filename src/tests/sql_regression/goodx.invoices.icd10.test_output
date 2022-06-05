@@ -1,0 +1,135 @@
+ICD-10 tests
+Parameters: This test assumes that a goodx1 directory exists, and that at least one debtor has been created and is ready for posting.
+ _debtor 
+---------
+ t
+(1 row)
+
+ _xml_template_created 
+-----------------------
+ t
+(1 row)
+
+ date_string_set 
+-----------------
+ t
+(1 row)
+
+----------------------------------------------------- Invalid ICD-10 rule loaded on DB
+ set_config 
+------------
+ A01.1
+(1 row)
+
+ update_toggles 
+----------------
+ 
+(1 row)
+
+ _found_invalid_setting 
+------------------------
+ t
+(1 row)
+
+----------------------------------------------------- SET ICD-10 string to NULL: Check that system returns DIAG04 for forced_validation and ignores for other settings
+ set_config 
+------------
+ 
+(1 row)
+
+NO ICD-10 codes in XML. Do not check ICD-10 codes (hard-coded instruction, as posted in desktop system)
+ _found_diag02 
+---------------
+ t
+(1 row)
+
+NO ICD-10 codes in XML. Do not check ICD-10 codes (as configured at site for entity)
+ update_toggles 
+----------------
+ 
+(1 row)
+
+ _found_diag03 
+---------------
+ t
+(1 row)
+
+NO ICD-10 codes in XML. Check ICD-10 codes (as configured at site for entity)
+ update_toggles 
+----------------
+ 
+(1 row)
+
+ _found_diag04 
+---------------
+ t
+(1 row)
+
+----------------------------------------------------- SET INVALID ICD-10: only return error for forced_validation
+                                 set_config                                 
+----------------------------------------------------------------------------
+ <icdlist_varchararr><element>INVALID ICD-10</element></icdlist_varchararr>
+(1 row)
+
+NO ICD-10 codes in XML. Do not check ICD-10 codes (hard-coded instruction, as posted in desktop system)
+ _found_diag02 
+---------------
+ t
+(1 row)
+
+NO ICD-10 codes in XML. Do not check ICD-10 codes (as configured at site for entity)
+ update_toggles 
+----------------
+ 
+(1 row)
+
+ _found_diag03 
+---------------
+ t
+(1 row)
+
+NO ICD-10 codes in XML. Check ICD-10 codes (as configured at site for entity)
+ update_toggles 
+----------------
+ 
+(1 row)
+
+ _found_icd01 
+--------------
+ t
+(1 row)
+
+----------------------------------------------------- SET VALID ICD-10: only checked for forced_validation
+                            set_config                             
+-------------------------------------------------------------------
+ <icdlist_varchararr><element>A01.1</element></icdlist_varchararr>
+(1 row)
+
+NO ICD-10 codes in XML. Do not check ICD-10 codes (hard-coded instruction, as posted in desktop system)
+ _found_diag02 
+---------------
+ t
+(1 row)
+
+NO ICD-10 codes in XML. Do not check ICD-10 codes (as configured at site for entity)
+ update_toggles 
+----------------
+ 
+(1 row)
+
+ _found_diag03 
+---------------
+ t
+(1 row)
+
+NO ICD-10 codes in XML. Check ICD-10 codes (as configured at site for entity)
+ update_toggles 
+----------------
+ 
+(1 row)
+
+ _no_icd_10_error | _no_diagnosis_error 
+------------------+---------------------
+ t                | t
+(1 row)
+

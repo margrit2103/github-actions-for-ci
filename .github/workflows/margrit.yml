@@ -67,7 +67,9 @@ jobs:
               psql -U postgres -d goodxweb -f "$TESTDIR/goodx.regression_test_functions.sql"
               
               echo ... run tests
-              psql -U postgres -d goodxweb -f "$TESTDIR/goodx.basic_transaction_test.sql" > $RESULTDIR/goodx.basic_transaction_test.test_output
+              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.basic_transaction_test.sql" > $RESULTDIR/goodx.basic_transaction_test.test_output
+              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.invoices.icd10.sql" > $RESULTDIR/goodx.invoices.icd10.test_output
+              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_anaesthetist.sql" > $RESULTDIR/goodx.assistant_anaesthetist.test_output
               
     #          echo .... EXECUTING python  python3 
     #          python3 ./goodx_repo/src/tests/sql_regression/test_python.py --output-dir ./goodx_repo/_dump/ --db-tag ${{ steps.settings.outputs.dbimg }}  --test-dir ./goodx_repo/src/tests/sql_regression/ 

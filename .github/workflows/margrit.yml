@@ -14,13 +14,13 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout goodx repository.  Create _dump directory in this repository.
+      - name: Checkout goodx repository. 
         uses: actions/checkout@v2
 
-      - run: mkdir -p ./_dump
-      - run: echo hello world > ./_dump/world.txt        
+      - name: Create _dump directory for storing results.
+        run: mkdir -p ./_dump
 
-      - name: Collect settings
+      - name: Collect settings 
         id: settings
         run: |
           while IFS= read -r l; do
@@ -33,15 +33,10 @@ jobs:
             committed $(git show -s --format=%ct)
           EOF
           )      
-
-      #- name: Login to Docker Hub
-        #uses: docker/login-action@v1        
-        #with:
-          #username: ${{ secrets.DOCKER_USERNAME }}
-          #password: ${{ secrets.DOCKER_PASSWORD }}          
-      
-      
-      - name: Checkout docker. GoodX Repository is shared in folder ./goodx_repo
+          
+      #goodx repository is mounted in the docker as addressed as goodx_repo. Results written to ./goodx_repo/_dump. (addnab/docker-run-action)
+      #addnab/docker-run-action does not automatically run docker endpoint, hence postgres is kicked off manually.
+      - name: Checkout docker, and run scripts. Script result written to ./goodx_repo/_dump.  (addnab/docker-run-action)
         uses: addnab/docker-run-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -74,7 +69,7 @@ jobs:
               python3 ./goodx_repo/src/tests/sql_regression/test_python.py
 
           
-      - name: Upload artifacts
+      - name: Store results in dump.zip (actions/upload-artifact) 
         timeout-minutes: 10
         if: always()
         uses: actions/upload-artifact@v2

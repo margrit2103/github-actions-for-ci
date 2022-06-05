@@ -60,10 +60,10 @@ jobs:
               psql -U postgres -d goodxweb -f "$TESTDIR/goodx.regression_test_functions.sql"
               
               echo ... Run tests
-              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.basic_transaction_test.sql" > $RESULTDIR/goodx.basic_transaction_test.test_output
-              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.invoices.icd10.sql" > $RESULTDIR/goodx.invoices.icd10.test_output
-              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_anaesthetist.sql" > $RESULTDIR/goodx.assistant_anaesthetist.test_output
-              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_000_credit_notes" -f "$TESTDIR/goodx.assistant_001_credit_notes.sql" > $RESULTDIR/goodx.assistant_001_credit_notes.test_output
+              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.basic_transaction_test.sql" > $RESULTDIR/goodx.basic_transaction_test.txt
+              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.invoices.icd10.sql" > $RESULTDIR/goodx.invoices.icd10.txt
+              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_anaesthetist.sql" > $RESULTDIR/goodx.assistant_anaesthetist.txt
+              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_000_credit_notes.sql" -f "$TESTDIR/goodx.assistant_001_credit_notes.sql" > $RESULTDIR/goodx.assistant_001_credit_notes.txt
               
               echo .... Comparing results
               python3 ./goodx_repo/src/tests/sql_regression/compare_results.py 

@@ -18,7 +18,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create _dump directory for storing results.
-        run: mkdir -p ./_dump
+        run: |
+             mkdir -p ./_dump
+             mkdir -p ./_dump/sql_regression
 
       - name: Collect settings 
         id: settings
@@ -36,6 +38,7 @@ jobs:
           
       #goodx repository is mounted in the docker as addressed as goodx_repo. Results written to ./goodx_repo/_dump. (addnab/docker-run-action)
       #addnab/docker-run-action does not automatically run docker endpoint, hence postgres is kicked off manually.
+      #https://github.com/actions/upload-artifact
       - name: Checkout docker, and run scripts. Script result written to ./goodx_repo/_dump.  (addnab/docker-run-action)
         uses: addnab/docker-run-action@v3
         with:
@@ -58,12 +61,16 @@ jobs:
               echo whomai 
               whoami
               
-              echo ... dumping lysglb.mpy 
-              psql -U postgres -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
-              psql -U postgres -d goodxweb -f "./goodx_repo/src/scripts/script1.sql" > ./goodx_repo/_dump/lysglb_mpy.txt
+              TESTDIR=./goodx_repo/src/tests/sql_regression
+              RESULTDIR=./goodx_repo/_dump/sql_regression
+              echo ... Prepare regression functions
+              psql -U postgres -d goodxweb -f "$TESTDIR/goodx.regression_test_functions.sql"
               
-              echo .... EXECUTING python  python3 
-              python3 ./goodx_repo/src/tests/sql_regression/test_python.py --output-dir ./goodx_repo/_dump/ --db-tag ${{ steps.settings.outputs.dbimg }}  
+              echo ... run tests
+              psql -U postgres -d goodxweb -f "$TESTDIR/goodx.basic_transaction_test.sql" > $RESULTDIR/goodx.basic_transaction_test.test_output
+              
+    #          echo .... EXECUTING python  python3 
+    #          python3 ./goodx_repo/src/tests/sql_regression/test_python.py --output-dir ./goodx_repo/_dump/ --db-tag ${{ steps.settings.outputs.dbimg }}  --test-dir ./goodx_repo/src/tests/sql_regression/ 
 
           
       - name: Store results in dump.zip (actions/upload-artifact) 

@@ -62,11 +62,8 @@ jobs:
               psql -U postgres -d goodxweb -c "select * from lysglb.mpy" > ./goodx_repo/_dump/lysglb_mpy.txt
               psql -U postgres -d goodxweb -f "./goodx_repo/src/scripts/script1.sql" > ./goodx_repo/_dump/lysglb_mpy.txt
               
-              echo .... EXECUTING python  python 
-              python ./goodx_repo/src/tests/sql_regression/test_python.py
-              
               echo .... EXECUTING python  python3 
-              python3 ./goodx_repo/src/tests/sql_regression/test_python.py --output-dir ./goodx_repo/_dump --db-tag ${{ steps.settings.outputs.dbimg }}  
+              python3 ./goodx_repo/src/tests/sql_regression/test_python.py --output-dir ./goodx_repo/_dump/ --db-tag ${{ steps.settings.outputs.dbimg }}  
 
           
       - name: Store results in dump.zip (actions/upload-artifact) 

@@ -7,8 +7,9 @@ import psycopg2
 import os
 
 
-def add_test(f,_text):
-    f.write(f"psql -U postgres -d goodxweb {_text}\n")
+def add_test(f,_testname,_text):
+    f.write(f"echo Testing {_testname}")
+    f.write(f'psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" {_text}\n')
     
    
 def main():
@@ -33,20 +34,20 @@ def main():
             #load different script for analysis-table project
             if analysis_record == 'true':
                 for _test in analysis_file_tests: 
-                    add_test(f, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
+                    add_test(f, _test, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
             else: 
                 for _test in year_schema_file_tests:
-                    add_test(f, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
+                    add_test(f, _test, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
             
             #parameter script goodx.assistant_000_credit_notes.sql loads posting transaction template 
             for _test in assistant_credit_note_tests:
-                add_test(f, f'-f "{_parameters["test-dir"]}/goodx.assistant_000_credit_notes.sql" -f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
+                add_test(f, _test, f'-f "{_parameters["test-dir"]}/goodx.assistant_000_credit_notes.sql" -f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
                 
             #load remaining scripts (leave out special_tests)    
             for fileName_relative in glob.glob(f"{_parameters['test-dir']}**/*.sql",recursive=True): 
                 _test = os.path.basename(fileName_relative).replace('.sql','')            
                 if not(_test in special_tests):
-                    add_test(f, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
+                    add_test(f, _test, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
 
             f.close()
     finally:

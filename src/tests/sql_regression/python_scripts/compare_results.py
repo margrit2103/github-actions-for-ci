@@ -31,7 +31,7 @@ def main():
 
 
     files=[]
-    for fileName_relative in glob.glob(d2+"**/*.txt",recursive=True):       
+    for fileName_relative in glob.glob(d2+"**/*.txt",recursive=False):       
         files.append(os.path.basename(fileName_relative))
 
 

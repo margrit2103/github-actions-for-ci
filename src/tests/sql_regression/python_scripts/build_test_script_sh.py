@@ -13,7 +13,7 @@ def add_test(f,_testname,_text):
 
 def delete_instr(f,_testname,_text):
     f.write(f"echo Deleting {_testname}\n")
-    f.write(f'rm {_testname}\n')    
+    f.write(f'rm {_text}\n')    
    
 def main():
     _parameters = standard_parameters.get_parameters()    
@@ -25,8 +25,8 @@ def main():
     year_schema_file_tests=['goodx.regression_test_functions','goodx.basic_transaction_test']
     assistant_credit_note_tests=['goodx.assistant_001_credit_notes','goodx.assistant_002_credit_notes','goodx.assistant_003_credit_notes','goodx.assistant_004_credit_notes','goodx.assistant_005_credit_notes']
     parameter_scripts=['goodx.assistant_000_credit_notes']
-    script_to_ignore=['clear_old_data']
-    special_tests=analysis_file_tests+year_schema_file_tests+assistant_credit_note_tests+parameter_scripts+script_to_ignore
+    scripts_to_ignore=['clear_old_data','goodx.stock_batch_tracking']
+    special_tests=analysis_file_tests+year_schema_file_tests+assistant_credit_note_tests+parameter_scripts+scripts_to_ignore
     
 
     connection = dbconnection.do_connection()
@@ -53,7 +53,7 @@ def main():
                 add_test(f, _test, f'-f "{_parameters["test-dir"]}/goodx.assistant_000_credit_notes.sql" -f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
                 
             #load remaining scripts (leave out special_tests)    
-            for fileName_relative in glob.glob(f"{_parameters['test-dir']}**/*.sql",recursive=True): 
+            for fileName_relative in glob.glob(f"{_parameters['test-dir']}**/*.sql",recursive=False): 
                 _test = os.path.basename(fileName_relative).replace('.sql','')            
                 if not(_test in special_tests):
                     add_test(f, _test, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')

@@ -39,9 +39,15 @@ jobs:
           EOF
           )      
           
-      #goodx repository is mounted in the docker as addressed as goodx_repo. Results written to ./goodx_repo/_dump. (addnab/docker-run-action)
-      #addnab/docker-run-action does not automatically run docker endpoint, hence postgres is kicked off manually.
-      #https://github.com/actions/upload-artifact
+      # goodx repository is mounted in the docker as addressed as goodx_repo. Results written to ./goodx_repo/_dump. (addnab/docker-run-action)
+      # addnab/docker-run-action does not automatically run docker endpoint, hence postgres is kicked off manually.
+      # https://github.com/actions/upload-artifact
+      # Steps:
+      #     - start postgres manually
+      #     - set environmental variables
+      #     - build_test_script_sh.py builds sql_regression.sh (some logic applied to determine which scripts are to be run, and how)
+      #     - Run sql_regression.sh
+      #     - compare_results.py compares results and raises an exception for inconsistant results.
       - name: Checkout docker, and run scripts. Script result written to ./goodx_repo/_dump.  (addnab/docker-run-action)
         uses: addnab/docker-run-action@v3
         with:
@@ -53,27 +59,18 @@ jobs:
           run: |
               echo ... Starting postgres
               su - postgres -c '/usr/lib/postgresql/12/bin/pg_ctl start -D /var/lib/postgresql/pgdata'
-              echo ... Testing
+              echo ... Setting environmental variables
               TESTDIR=./goodx_repo/src/tests/sql_regression
               RESULTDIR=./goodx_repo/_dump/sql_regression/answ
-              echo ... Prepare regression functions
-              psql -U postgres -d goodxweb -f "$TESTDIR/goodx.regression_test_functions.sql"
-              
-              echo ... Run tests
-              MYTESTTEST=psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.basic_transaction_test.sql" > $RESULTDIR/goodx.basic_transaction_test.txt
-              echo -executing par
-              $MYTESTTEST
-              echo -executing directly
-              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.invoices.icd10.sql" > $RESULTDIR/goodx.invoices.icd10.txt
-              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_anaesthetist.sql" > $RESULTDIR/goodx.assistant_anaesthetist.txt
-              psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_000_credit_notes.sql" -f "$TESTDIR/goodx.assistant_001_credit_notes.sql" > $RESULTDIR/goodx.assistant_001_credit_notes.txt
-              
+              SHFILE=./goodx_repo/_dump/sql_regression.sh
+              echo .... Build sql_regression.sh
+              python3 ./goodx_repo/src/tests/sql_regression/python_scripts/build_test_script_sh.py  --test-dir $TESTDIR --answ-dir $RESULTDIR --sh-file $SHFILE
+              echo ... Setting access
+              chmod 777 $SHFILE              
+              echo ... Run scripts
+              sh $SHFILE
               echo .... Comparing results
               python3 ./goodx_repo/src/tests/sql_regression/python_scripts/compare_results.py --db-tag ${{ steps.settings.outputs.dbimg }}
-
-    #          echo .... EXECUTING python  python3 
-    #          python3 ./goodx_repo/src/tests/sql_regression/test_python.py --output-dir ./goodx_repo/_dump/ --db-tag ${{ steps.settings.outputs.dbimg }}  --test-dir ./goodx_repo/src/tests/sql_regression/ 
-
           
       - name: Store results in dump.zip (actions/upload-artifact) 
         timeout-minutes: 10

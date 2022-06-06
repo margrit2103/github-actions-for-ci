@@ -8,6 +8,15 @@ def do_connection():
     _host = 'localhost'
     _port = '5432'
     _database = 'goodxweb'
+    
+    
+    _user = 'postgres'
+    _password = 'masterkey'
+    _host = 'localhost'
+    _port = '5428'
+    _database = 'goodxweb'
+    
+    
     return psycopg2.connect(user = _user,
                                   password = _password,
                                   host = _host,

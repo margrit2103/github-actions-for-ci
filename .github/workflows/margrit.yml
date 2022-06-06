@@ -66,7 +66,7 @@ jobs:
               psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" -f "$TESTDIR/goodx.assistant_000_credit_notes.sql" -f "$TESTDIR/goodx.assistant_001_credit_notes.sql" > $RESULTDIR/goodx.assistant_001_credit_notes.txt
               
               echo .... Comparing results
-              python3 ./goodx_repo/src/tests/sql_regression/compare_results.py 
+              python3 ./goodx_repo/src/tests/sql_regression/python_scripts/compare_results.py --db-tag ${{ steps.settings.outputs.dbimg }}
 
     #          echo .... EXECUTING python  python3 
     #          python3 ./goodx_repo/src/tests/sql_regression/test_python.py --output-dir ./goodx_repo/_dump/ --db-tag ${{ steps.settings.outputs.dbimg }}  --test-dir ./goodx_repo/src/tests/sql_regression/ 

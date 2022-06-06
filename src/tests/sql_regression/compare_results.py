@@ -1,13 +1,21 @@
 import filecmp
 import glob
+import os
 
 d1 = "./goodx_repo/_dump/sql_regression/answ"
 d2 = "./goodx_repo/_dump/sql_regression/model_answ"
-files = glob.glob(f"{d2}/*.txt")
+
+#d1 = "c:/xxx/answ"
+#d2 = "c:/xxx/model_answ"
+
+files=[]
+for fileName_relative in glob.glob(d2+"**/*.txt",recursive=True):       
+    files.append(os.path.basename(fileName_relative))
 
 # shallow comparison
 match, mismatch, errors = filecmp.cmpfiles(d1, d2, files)
 print('Shallow comparison')
+print(f"File compared: {files}")
 print("Matched results:", match)
 print("Mismatched results:", mismatch)
 print("Errors:", errors)

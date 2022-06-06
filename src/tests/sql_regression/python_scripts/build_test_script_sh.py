@@ -8,20 +8,25 @@ import os
 
 
 def add_test(f,_testname,_text):
-    f.write(f"echo Testing {_testname}")
+    f.write(f"echo Testing {_testname}\n")
     f.write(f'psql -U postgres -d goodxweb -c"SET client_min_messages TO WARNING;" {_text}\n')
-    
+
+def delete_instr(f,_testname,_text):
+    f.write(f"echo Deleting {_testname}\n")
+    f.write(f'rm {_testname}\n')    
    
 def main():
     _parameters = standard_parameters.get_parameters()    
     print( _parameters )
     sh_file = "./goodx_repo/_dump/test.sh"
     #sh_file = 'c:/aaa/test.sh'
+    model_dir = "./goodx_repo/_dump/sql_regression/model_answ"
     analysis_file_tests=['goodx.analysis_schema','goodx.analysis_cost_center','goodx.analysis.definitions']
     year_schema_file_tests=['goodx.regression_test_functions','goodx.basic_transaction_test']
     assistant_credit_note_tests=['goodx.assistant_001_credit_notes','goodx.assistant_002_credit_notes','goodx.assistant_003_credit_notes','goodx.assistant_004_credit_notes','goodx.assistant_005_credit_notes']
     parameter_scripts=['goodx.assistant_000_credit_notes']
-    special_tests=analysis_file_tests+year_schema_file_tests+assistant_credit_note_tests+parameter_scripts
+    script_to_ignore=['clear_old_data']
+    special_tests=analysis_file_tests+year_schema_file_tests+assistant_credit_note_tests+parameter_scripts+script_to_ignore
     
 
     connection = dbconnection.do_connection()
@@ -31,13 +36,17 @@ def main():
         analysis_record = cursor.fetchone()[0]
         print( analysis_record )
         with open(_parameters["sh-file"], 'w') as f:
-            #load different script for analysis-table project
+            #load different script for analysis-table project.  Remove the appropriate scripts that will not be applied
             if analysis_record == 'true':
                 for _test in analysis_file_tests: 
                     add_test(f, _test, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
+                for _test in year_schema_file_tests:
+                    delete_instr( f,_test,f"{model_dir}/{_test}.txt" )               
             else: 
                 for _test in year_schema_file_tests:
                     add_test(f, _test, f'-f "{_parameters["test-dir"]}/{_test}.sql" > {_parameters["answ-dir"]}/{_test}.txt\n')
+                for _test in analysis_file_tests:
+                    delete_instr( f,_test,f"{model_dir}/{_test}.txt" )               
             
             #parameter script goodx.assistant_000_credit_notes.sql loads posting transaction template 
             for _test in assistant_credit_note_tests:

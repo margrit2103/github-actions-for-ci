@@ -1,6 +1,7 @@
 import sys
 import getopt
 
+
 __all_pars, remainder = getopt.getopt (  sys.argv[1:], '', ['output-dir=','db-tag=','test-dir='] ) 
 
 

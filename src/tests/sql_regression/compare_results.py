@@ -19,35 +19,41 @@ for fileName_relative in glob.glob(d2+"**/*.txt",recursive=True):
     files.append(os.path.basename(fileName_relative))
 
 # shallow comparison
+compare_failed = False
 match, mismatch, errors = filecmp.cmpfiles(d1, d2, files)
 print(f"{result_path}/test_result.txt")
 with open(result_summary_file, 'w') as f:
     try:
-        f.write('readme')
-        f.write('Shallow comparison')
-        f.write(f"File compared: {files}")
-        f.write(f"Matched results: {match}")
-        f.write(f"Mismatched results: {mismatch}")
+        f.write('--[Test result]---------------------------\n')
+        f.write('Shallow comparison\n')
+        f.write(f"File compared: {files}\n")
+        f.write(f"Matched results: {match}\n")
+        f.write(f"Mismatched results: {mismatch}\n")
         
-        f.write(f"Errors: {errors}")
+        f.write(f"Errors: {errors}\n")
 
-        _result = ''
+        _result = '\n'
         if len(errors) > 0:
-            _result  = f"{_result} \n**** Files not found in either the model or answ folders"
+            _result  = f"{_result}**** Files missing in either the model or answ folders\n"
+            compare_failed = True
         if len(mismatch) > 0:
-            _result  = f"{_result} \n**** Test answer does not correspond to model answer"
-        if _result != '':    
+            _result  = f"{_result}**** Test answer does not correspond to model answer\n"
+        if _result != '':   
+            compare_failed = True        
             f.write(_result)            
         else:
-            f.write('OK')    
+            f.write('**** Test successful. OK\n')    
     except:
-        raise Exception(_result) 
+        raise Exception(f"SCRIPT FAILURE {_result}") 
     finally:        
         f.close()
         with open(result_summary_file, 'r') as f:
             file_contents = f.read()
             f.close()
             print(file_contents)
+
+if compare_failed:
+    raise Exception(f"**** Test failed")     
         
         
 

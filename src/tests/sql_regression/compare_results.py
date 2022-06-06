@@ -3,7 +3,7 @@ import glob
 import os
 
 result_path = "./goodx_repo/_dump/sql_regression"
-result_path = "c:/xxx"
+#result_path = "c:/xxx"
 
 result_summary_file = f"{result_path}/test_result.txt"
 
@@ -22,7 +22,7 @@ for fileName_relative in glob.glob(d2+"**/*.txt",recursive=True):
 match, mismatch, errors = filecmp.cmpfiles(d1, d2, files)
 print(f"{result_path}/test_result.txt")
 with open(result_summary_file, 'w') as f:
-    #try:
+    try:
         f.write('readme')
         f.write('Shallow comparison')
         f.write(f"File compared: {files}")
@@ -40,9 +40,9 @@ with open(result_summary_file, 'w') as f:
             f.write(_result)            
         else:
             f.write('OK')    
-    #except:
-    #    raise Exception(_result) 
-    #finally:        
+    except:
+        raise Exception(_result) 
+    finally:        
         f.close()
         with open(result_summary_file, 'r') as f:
             file_contents = f.read()
